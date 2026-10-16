@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyến Tàu Tri Ân - Chúc Mừng 20/10 Mẹ Yêu</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: {
+                            950: '#060913',
+                            900: '#0a0e1a',
+                            800: '#121829',
+                            700: '#1a233a',
+                            600: '#263352'
+                        },
+                        gold: {
+                            light: '#fff2b2',
+                            DEFAULT: '#ffd700',
+                            dark: '#c89600',
+                            bronze: '#b38024'
+                        },
+                        rose: {
+                            soft: '#ffb3c6',
+                            accent: '#ff4d6d',
+                            glow: 'rgba(255,77,109,0.35)'
+                        }
+                    },
+                    fontFamily: {
+                        cormorant: ['"Cormorant Garamond"', 'serif'],
+                        playfair: ['"Playfair Display"', 'serif'],
+                        sans: ['Montserrat', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'gold-glow': '0 0 25px rgba(255, 215, 0, 0.35)',
+                        'gold-deep': '0 10px 40px -10px rgba(200, 150, 0, 0.4)',
+                        'rail-glow': '0 0 15px rgba(255, 215, 0, 0.6)'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+            --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body {
+            background-color: #060913;
+            color: #f1f5f9;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Glassmorphism Paneling */
+        .glass-panel {
+            background: rgba(18, 24, 41, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.18);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .glass-ticket {
+            background: linear-gradient(135deg, rgba(26, 35, 58, 0.9) 0%, rgba(18, 24, 41, 0.95) 100%);
+            border: 2px solid #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.25), inset 0 0 20px rgba(255, 215, 0, 0.1);
+        }
+
+        /* Canvas Background */
+        #sky-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Gold Gradient Text */
+        .gold-text {
+            background: linear-gradient(135deg, #fff2b2 0%, #ffd700 50%, #c89600 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .rose-text {
+            background: linear-gradient(135deg, #ffffff 0%, #ffb3c6 50%, #ff4d6d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Train Steam Engine Styles */
+        .steam-puff {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,215,0,0.2) 40%, rgba(255,255,255,0) 80%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatSteam 3s ease-out forwards;
+        }
+
+        @keyframes floatSteam {
+            0% { transform: translate(0, 0) scale(0.3); opacity: 0.9; }
+            50% { opacity: 0.6; }
+            100% { transform: translate(-120px, -100px) scale(2.8); opacity: 0; }
+        }
+
+        /* Con trỏ soạn thảo hiệu ứng chữ chạy */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1.1em;
+            background-color: #ffd700;
+            margin-left: 4px;
+            vertical-align: middle;
+            animation: blinkCursor 0.8s infinite;
+        }
+
+        @keyframes blinkCursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(10, 14, 26, 0.8);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 0, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 215, 0, 0.6);
+        }
+
+        /* Train Track Glow Animation */
+        .rail-line {
+            background: linear-gradient(90deg, transparent 0%, #ffd700 20%, #fff2b2 50%, #ffd700 80%, transparent 100%);
+            height: 3px;
+            box-shadow: 0 0 12px #ffd700, 0 0 25px #ffd700;
+        }
+
+        /* Ticket Notch Effect */
+        .ticket-notch-left, .ticket-notch-right {
+            position: absolute;
+            top: 50%;
+            width: 24px;
+            height: 24px;
+            background-color: #060913;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+        .ticket-notch-left { left: -13px; border-right: 2px solid #ffd700; }
+        .ticket-notch-right { right: -13px; border-left: 2px solid #ffd700; }
+
+        /* Smooth Screen Transitions */
+        .view-transition {
+            transition: opacity 0.8s var(--ease-luxury), transform 0.8s var(--ease-luxury);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-gold/30 selection:text-gold-light">
+
+    <!-- 60FPS Ambient Star & Lantern Particle Canvas -->
+    <canvas id="sky-canvas"></canvas>
+
+    <!-- Background Audio Element -->
+    <audio id="bg-audio" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf7f6.mp3?filename=gentle-piano-lofi-111149.mp3" type="audio/mpeg">
+        Trình duyệt của bạn không hỗ trợ thẻ audio.
+    </audio>
+
+    <!-- Top Master Control Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 p-4 sm:p-6 flex items-center justify-between pointer-events-none">
+        <div class="pointer-events-auto flex items-center gap-3 bg-midnight-900/80 backdrop-blur-md px-4 py-2 rounded-full border border-gold/30 shadow-lg">
+            <i class="fa-solid fa-train-subway text-gold animate-pulse"></i>
+            <span class="font-cormorant font-bold tracking-widest text-sm text-gold-light uppercase">TOA TÀU YÊU THƯƠNG</span>
+        </div>
+
+        <div class="pointer-events-auto flex items-center gap-2">
+            <!-- Audio Toggle Button -->
+            <button id="audio-btn" onclick="toggleAudioEngine()" class="bg-midnight-900/80 hover:bg-midnight-800 text-gold-light border border-gold/30 px-4 py-2 rounded-full text-xs font-semibold tracking-wider flex items-center gap-2 transition-all duration-300 shadow-lg group">
+                <i id="audio-icon" class="fa-solid fa-volume-xmark text-gold group-hover:scale-110 transition-transform"></i>
+                <span id="audio-text" class="hidden sm:inline">Âm Thanh Tàu</span>
+            </button>
+            <!-- Whistle Button -->
+            <button onclick="playSteamWhistle()" class="bg-gradient-to-r from-gold via-gold-light to-gold-dark text-midnight-950 font-bold px-3.5 py-2 rounded-full text-xs tracking-wider flex items-center gap-1.5 transition-all duration-300 shadow-gold-glow hover:scale-105 active:scale-95" title="Kéo Còi Tàu">
+                <i class="fa-solid fa-bullhorn"></i>
+                <span class="hidden sm:inline">Còi Tàu</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full min-h-screen flex flex-col justify-center items-center p-4 sm:p-8 z-10 my-auto pt-20 pb-28">
+
+        <!-- VIEW 1: BOARDING PASS / GOLDEN TICKET -->
+        <section id="view-ticket" class="w-full max-w-xl view-transition opacity-100 scale-100 flex flex-col items-center">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 text-gold text-xs font-cormorant tracking-widest uppercase mb-4 shadow-inner">
+                    <i class="fa-solid fa-heart text-rose-accent"></i>
+                    <span>Chuyến Tàu Đặc Biệt Ngày 20/10</span>
+                </div>
+                <h1 class="font-playfair text-3xl sm:text-5xl font-bold tracking-tight mb-2">
+                    <span class="gold-text">Tấm Vé Tri Ân</span> Mẹ Yêu
+                </h1>
+                <p class="text-gray-300/80 text-sm sm:text-base font-light max-w-md mx-auto">
+                    Chuyến tàu chạy trên hành trình của tình yêu thương, chở những lời chúc chân thành nhất cập bến trái tim Mẹ.
+                </p>
+            </div>
+
+            <div class="w-full glass-ticket rounded-3xl p-6 sm:p-8 relative overflow-hidden group cursor-pointer transition-transform duration-500 hover:scale-[1.02]" onclick="boardExpressTrain()">
+                <div class="ticket-notch-left"></div>
+                <div class="ticket-notch-right"></div>
+
+                <div class="flex items-center justify-between border-b border-gold/20 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center text-gold">
+                            <i class="fa-solid fa-ticket text-lg"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-cormorant uppercase tracking-widest text-gold/80">Vé Tàu VIP Không Thời Hạn</p>
+                            <p class="font-playfair text-lg font-bold text-white">Hành Trình Yêu Thương</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-mono text-gold-light bg-gold/10 px-2.5 py-1 rounded-md border border-gold/30">NO. 2010-ME</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6 text-left">
+                    <div>
+                        <p class="text-[11px] text-gray-400 font-sans uppercase tracking-wider">Ga Khởi Hành</p>
+                        <p class="font-cormorant font-bold text-base sm:text-lg text-gold-light"><i class="fa-solid fa-house-heart text-rose-accent mr-1"></i> Trái Tim Con</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] text-gray-400 font-sans uppercase tracking-wider">Ga Đến</p>
+                        <p class="font-cormorant font-bold text-base sm:text-lg text-gold-light"><i class="fa-solid fa-sun text-gold mr-1"></i> Bến Cảng Hạnh Phúc</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] text-gray-400 font-sans uppercase tracking-wider">Hành Khách VIP</p>
+                        <p class="font-cormorant font-bold text-base text-white">Phạm Thị Thúy</p>
+                    </div>
+                    <div>
+                        <p class="text-[11px] text-gray-400 font-sans uppercase tracking-wider">Thời Gian</p>
+                        <p class="font-cormorant font-bold text-base text-white">20 Tháng 10 & Mãi Mãi</p>
+                    </div>
+                </div>
+
+                <div class="border-b-2 border-dashed border-gold/30 my-4"></div>
+
+                <div class="flex items-center justify-between pt-2">
+                    <span class="text-xs text-gold/80 font-cormorant italic"><i class="fa-solid fa-sparkles text-gold mr-1"></i> Nhấn để mở chuyến tàu...</span>
+                    <span class="px-5 py-2 rounded-full bg-gradient-to-r from-gold via-gold-light to-gold-dark text-midnight-950 font-bold text-xs font-sans tracking-widest uppercase shadow-gold-glow group-hover:scale-105 transition-transform">
+                        Lên Tàu Ngay <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: THE EXPRESS TRAIN & CARRIAGES -->
+        <section id="view-train" class="w-full max-w-4xl view-transition opacity-0 scale-95 hidden flex-col items-center">
+            
+            <div id="station-badge" class="mb-4 px-5 py-1.5 rounded-full bg-midnight-800/90 border border-gold/40 text-gold text-xs font-cormorant tracking-widest uppercase shadow-lg flex items-center gap-2">
+                <i class="fa-solid fa-location-dot text-rose-accent animate-bounce"></i>
+                <span id="station-name-text">Toa 1: Kỷ Niệm Yêu Thương</span>
+            </div>
+
+            <div class="w-full relative py-8 overflow-hidden rounded-3xl bg-midnight-900/60 border border-gold/20 shadow-2xl mb-8">
+                <div class="absolute inset-x-0 bottom-6 h-24 opacity-30 pointer-events-none flex items-end justify-between px-4">
+                    <i class="fa-solid fa-tree text-midnight-700 text-5xl"></i>
+                    <i class="fa-solid fa-mountain text-midnight-700 text-7xl"></i>
+                    <i class="fa-solid fa-tree text-midnight-700 text-4xl"></i>
+                    <i class="fa-solid fa-mountain-sun text-midnight-700 text-8xl"></i>
+                    <i class="fa-solid fa-tree text-midnight-700 text-6xl"></i>
+                </div>
+
+                <div class="absolute bottom-6 inset-x-0 rail-line z-0"></div>
+
+                <div id="train-track" class="flex items-end gap-3 px-8 transition-transform duration-700 ease-out z-10 relative" style="transform: translateX(0px);">
+                    
+                    <div id="locomotive" class="flex-shrink-0 w-44 sm:w-52 h-32 sm:h-36 relative flex flex-col justify-end items-center cursor-pointer group" onclick="playSteamWhistle()">
+                        <div id="steam-pipe" class="absolute top-2 left-10 w-4 h-8 bg-gold-dark rounded-t-md border border-gold/60"></div>
+                        <div class="w-full h-24 bg-gradient-to-r from-midnight-950 via-midnight-800 to-midnight-900 border-2 border-gold/60 rounded-t-2xl rounded-r-lg relative p-2 shadow-2xl flex items-center justify-between">
+                            <div class="w-10 h-full bg-gold/20 border-r border-gold/40 flex flex-col justify-around items-center">
+                                <div class="w-3 h-3 rounded-full bg-rose-accent animate-ping"></div>
+                                <i class="fa-solid fa-heart text-gold text-xs"></i>
+                            </div>
+                            <div class="text-center px-2">
+                                <span class="font-cormorant font-bold text-xs text-gold tracking-widest block">EXPRESS</span>
+                                <span class="text-[10px] text-gray-400 font-mono">20/10-MẸ</span>
+                            </div>
+                            <div class="w-6 h-10 bg-gold rounded-r-md border border-white shadow-[0_0_20px_#ffd700] flex items-center justify-center">
+                                <div class="w-2 h-6 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="w-full flex justify-around px-2 -mt-3 z-20">
+                            <div class="w-8 h-8 rounded-full bg-midnight-950 border-2 border-gold flex items-center justify-center animate-spin" style="animation-duration: 3s;"><div class="w-2 h-2 bg-gold rounded-full"></div></div>
+                            <div class="w-8 h-8 rounded-full bg-midnight-950 border-2 border-gold flex items-center justify-center animate-spin" style="animation-duration: 3s;"><div class="w-2 h-2 bg-gold rounded-full"></div></div>
+                            <div class="w-8 h-8 rounded-full bg-midnight-950 border-2 border-gold flex items-center justify-center animate-spin" style="animation-duration: 3s;"><div class="w-2 h-2 bg-gold rounded-full"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- CARRIAGE 1 -->
+                    <div id="carriage-1" onclick="selectCarriage(1)" class="carriage-item flex-shrink-0 w-44 sm:w-52 h-28 sm:h-32 bg-midnight-800/90 border-2 border-gold/50 rounded-2xl p-3 relative cursor-pointer transition-all duration-300 hover:border-gold hover:shadow-gold-glow flex flex-col justify-between">
+                        <div class="flex items-center justify-between text-xs text-gold border-b border-gold/20 pb-1">
+                            <span class="font-cormorant font-bold"><i class="fa-solid fa-gem mr-1"></i> TOA 01</span>
+                            <span class="text-[10px] text-gray-400">Kỷ Niệm</span>
+                        </div>
+                        <div class="text-center my-auto">
+                            <i class="fa-solid fa-hands-holding-child text-2xl text-rose-soft mb-1"></i>
+                            <p class="text-xs font-semibold text-white">Công Ơn Dưỡng Dục</p>
+                        </div>
+                        <div class="w-full flex justify-between px-3 -mb-6">
+                            <div class="w-6 h-6 rounded-full bg-midnight-950 border-2 border-gold"></div>
+                            <div class="w-6 h-6 rounded-full bg-midnight-950 border-2 border-gold"></div>
+                        </div>
+                    </div>
+
+                    <!-- CARRIAGE 2 -->
+                    <div id="carriage-2" onclick="selectCarriage(2)" class="carriage-item flex-shrink-0 w-44 sm:w-52 h-28 sm:h-32 bg-midnight-800/90 border-2 border-gold/30 rounded-2xl p-3 relative cursor-pointer transition-all duration-300 hover:border-gold hover:shadow-gold-glow flex flex-col justify-between opacity-80">
+                        <div class="flex items-center justify-between text-xs text-gold border-b border-gold/20 pb-1">
+                            <span class="font-cormorant font-bold"><i class="fa-solid fa-heart mr-1"></i> TOA 02</span>
+                            <span class="text-[10px] text-gray-400">Tri Ân</span>
+                        </div>
+                        <div class="text-center my-auto">
+                            <i class="fa-solid fa-seedling text-2xl text-gold mb-1"></i>
+                            <p class="text-xs font-semibold text-white">Lời Cảm Ơn Từ Trái Tim</p>
+                        </div>
+                        <div class="w-full flex justify-between px-3 -mb-6">
+                            <div class="w-6 h-6 rounded-full bg-midnight-950 border-2 border-gold"></div>
+                            <div class="w-6 h-6 rounded-full bg-midnight-950 border-2 border-gold"></div>
+                        </div>
+                    </div>
+
+                    <!-- CARRIAGE 3 -->
+                    <div id="carriage-3" onclick="selectCarriage(3)" class="carriage-item flex-shrink-0 w-44 sm:w-52 h-28 sm:h-32 bg-midnight-800/90 border-2 border-gold/30 rounded-2xl p-3 relative cursor-pointer transition-all duration-300 hover:border-gold hover:shadow-gold-glow flex flex-col justify-between opacity-80">
+                        <div class="flex items-center justify-between text-xs text-gold border-b border-gold/20 pb-1">
+                            <span class="font-cormorant font-bold"><i class="fa-solid fa-sun mr-1"></i> TOA 03</span>
+                            <span class="text-[10px] text-gray-400">Cầu Chúc</span>
+                        </div>
+                        <div class="text-center my-auto">
+                            <i class="fa-solid fa-dove text-2xl text-rose-soft mb-1"></i>
+                            <p class="text-xs font-semibold text-white">Sức Khỏe & Bình An</p>
+                        </div>
+                        <div class="w-full flex justify-between px-3 -mb-6">
+                            <div class="w-6 h-6 rounded-full bg-midnight-950 border-2 border-gold"></div>
+                            <div class="w-6 h-6 rounded-full bg-midnight-950 border-2 border-gold"></div>
+                        </div>
+                    </div>
+
+                    <!-- CARRIAGE 4 -->
+                    <div id="carriage-4" onclick="selectCarriage(4)" class="carriage-item flex-shrink-0 w-44 sm:w-52 h-28 sm:h-32 bg-midnight-800/90 border-2 border-gold/30 rounded-2xl p-3 relative cursor-pointer transition-all duration-300 hover:border-gold hover:shadow-gold-glow flex flex-col justify-between opacity-80">
+                        <div class="flex items-center justify-between text-xs text-gold border-b border-gold/20 pb-1">
+                            <span class="font-cormorant font-bold"><i class="fa-solid fa-pen-nib mr-1"></i> TOA 04</span>
+                            <span class="text-[10px] text-gray-400">Tự Viết</span>
+                        </div>
+                        <div class="text-center my-auto">
+                            <i class="fa-solid fa-envelope-open-text text-2xl text-gold mb-1"></i>
+                            <p class="text-xs font-semibold text-white">Gửi Lời Chúc Riêng</p>
+                        </div>
+                        <div class="w-full flex justify-between px-3 -mb-6">
+                            <div class="w-6 h-6 rounded-full bg-midnight-950 border-2 border-gold"></div>
+                            <div class="w-6 h-6 rounded-full bg-midnight-950 border-2 border-gold"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Station Content Display Card -->
+            <div id="station-card" class="w-full glass-panel rounded-3xl p-6 sm:p-8 text-left relative min-h-[220px] shadow-2xl border border-gold/30 mb-6">
+                <div class="flex items-center justify-between mb-4 border-b border-gold/15 pb-3">
+                    <h3 id="card-title" class="font-playfair text-xl sm:text-2xl font-bold text-gold-light">
+                        1. Kỷ Niệm Yêu Thương
+                    </h3>
+                    <span id="card-subtitle" class="text-xs font-cormorant text-rose-soft tracking-wider uppercase">Toa Tàu Kỷ Niệm</span>
+                </div>
+
+                <!-- Message Body với Hiệu ứng Chữ Chạy -->
+                <div id="card-message-container" class="text-gray-200 text-sm sm:text-base leading-relaxed font-sans font-light mb-6 min-h-[80px]">
+                    <span id="card-text"></span><span class="typing-cursor" id="typing-cursor"></span>
+                </div>
+
+                <div id="custom-message-editor" class="hidden flex-col gap-3 mb-4">
+                    <label class="text-xs text-gold font-cormorant uppercase tracking-wider">Nhập lời chúc riêng của bạn dành cho Mẹ:</label>
+                    <textarea id="custom-wish-input" rows="3" class="w-full bg-midnight-950/80 border border-gold/40 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-gold" placeholder="Mẹ yêu ơi, nhân ngày 20/10 con muốn chúc Mẹ..."></textarea>
+                    <button onclick="saveCustomWish()" class="self-end px-5 py-2 rounded-full bg-gold text-midnight-950 text-xs font-bold font-sans hover:bg-gold-light transition-colors">
+                        <i class="fa-solid fa-check mr-1"></i> Lưu Lời Chúc
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-gold/10">
+                    <button onclick="copyCurrentWish()" class="px-4 py-2 rounded-full bg-midnight-800 hover:bg-midnight-700 text-gold-light text-xs font-semibold border border-gold/20 flex items-center gap-2 transition-colors">
+                        <i class="fa-solid fa-copy text-gold"></i>
+                        <span>Sao Chép Lời Chúc</span>
+                    </button>
+                    <button onclick="triggerConfetti()" class="px-5 py-2 rounded-full bg-gradient-to-r from-rose-accent to-rose-soft text-white text-xs font-bold shadow-lg hover:opacity-90 transition-opacity flex items-center gap-2">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Bắn Bông Mùa Lễ 💖</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="flex items-center gap-4">
+                <button onclick="prevCarriage()" class="px-6 py-3 rounded-full bg-midnight-800 border border-gold/30 text-gold hover:bg-midnight-700 font-cormorant font-bold text-xs uppercase tracking-widest transition-all">
+                    <i class="fa-solid fa-chevron-left mr-1"></i> Toa Trước
+                </button>
+                <button onclick="nextCarriage()" class="px-8 py-3 rounded-full bg-gradient-to-r from-gold via-gold-light to-gold-dark text-midnight-950 font-bold text-xs uppercase font-sans tracking-widest shadow-gold-glow hover:scale-105 transition-all">
+                    Toa Kế Tiếp <i class="fa-solid fa-chevron-right ml-1"></i>
+                </button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer Credit -->
+    <footer class="w-full text-center py-4 text-[11px] font-cormorant tracking-widest text-gold/50 z-10 border-t border-gold/10 bg-midnight-950/80">
+        THE EXPRESS OF GRATITUDE &bull; CHUYẾN TÀU TRI ÂN MẸ 20/10 &bull; DESIGNED WITH LOVE
+    </footer>
+
+    <!-- JavaScript Engine -->
+    <script>
+        /* ========================================================== */
+        /* 1. 60FPS AMBIENT CANVAS ENGINE (STARS & FLOATING LANTERNS)  */
+        /* ========================================================== */
+        const canvas = document.getElementById('sky-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        class Star {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height * 0.7;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.alpha = Math.random();
+                this.speed = Math.random() * 0.02 + 0.005;
+            }
+            update() {
+                this.alpha += this.speed;
+                if (this.alpha > 1 || this.alpha < 0) this.speed = -this.speed;
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.abs(this.alpha);
+                ctx.fillStyle = '#ffd700';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class Lantern {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = height + Math.random() * 100;
+                this.size = Math.random() * 6 + 4;
+                this.speedY = Math.random() * 0.8 + 0.3;
+                this.speedX = Math.sin(this.y * 0.01) * 0.5;
+                this.alpha = Math.random() * 0.6 + 0.4;
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += Math.sin(this.y * 0.02) * 0.4;
+                if (this.y < -20) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = '#ff4d6d';
+                ctx.shadowColor = '#ffd700';
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y, this.size, this.size * 1.3, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        const stars = Array.from({ length: 80 }, () => new Star());
+        const lanterns = Array.from({ length: 25 }, () => new Lantern());
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            stars.forEach(s => { s.update(); s.draw(); });
+            lanterns.forEach(l => { l.update(); l.draw(); });
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+
+        /* ========================================================== */
+        /* 2. MUSIC & AUDIO SYNTHESIZER ENGINE                      */
+        /* ========================================================== */
+        const bgAudio = document.getElementById('bg-audio');
+        let isAudioRunning = false;
+
+        function toggleAudioEngine() {
+            const btnText = document.getElementById('audio-text');
+            const btnIcon = document.getElementById('audio-icon');
+
+            if (isAudioRunning) {
+                bgAudio.pause();
+                isAudioRunning = false;
+                btnText.innerText = "Âm Thanh Tàu";
+                btnIcon.className = "fa-solid fa-volume-xmark text-gold";
+            } else {
+                bgAudio.play().then(() => {
+                    isAudioRunning = true;
+                    btnText.innerText = "Đang Phát Nhạc";
+                    btnIcon.className = "fa-solid fa-volume-high text-gold animate-bounce";
+                }).catch(e => {
+                    console.log("Trình duyệt chặn autoplay:", e);
+                    alert("Vui lòng tương tác thêm một lần nữa để trình duyệt cho phép phát nhạc.");
+                });
+            }
+        }
+
+        // Realistic Steam Whistle Sound Effect
+        function playSteamWhistle() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            createSteamPuffVisual();
+
+            const now = audioCtx.currentTime;
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc1.type = 'sawtooth';
+            osc2.type = 'sine';
+
+            osc1.frequency.setValueAtTime(440, now);
+            osc2.frequency.setValueAtTime(554.37, now);
+
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.15, now + 0.2);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
+
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + 2.3);
+            osc2.stop(now + 2.3);
+        }
+
+        function createSteamPuffVisual() {
+            const pipe = document.getElementById('steam-pipe');
+            if (!pipe) return;
+            const rect = pipe.getBoundingClientRect();
+
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    const puff = document.createElement('div');
+                    puff.className = 'steam-puff';
+                    puff.style.left = `${rect.left + 5}px`;
+                    puff.style.top = `${rect.top - 10}px`;
+                    puff.style.width = '20px';
+                    puff.style.height = '20px';
+                    document.body.appendChild(puff);
+
+                    setTimeout(() => puff.remove(), 3000);
+                }, i * 200);
+            }
+        }
+
+
+        /* ========================================================== */
+        /* 3. CARRIAGE STATIONS DATA & TYPEWRITER ENGINE              */
+        /* ========================================================== */
+        const stations = [
+            {
+                id: 1,
+                name: "Toa 1: Kỷ Niệm Yêu Thương",
+                title: "1. Công Ơn Dưỡng Dục Thời Gian",
+                subtitle: "Toa Tàu Kỷ Niệm",
+                message: "Mẹ ơi, đi suốt cuộc đời không ai tốt bằng Mẹ. Những tháng năm vất vả gánh nặng nuôi con khôn lớn là những ký ức vô giá mà con luôn trân trọng. Cảm ơn Mẹ đã luôn là vòng tay ấm áp che chở cho con qua bao bão giông cuộc đời."
+            },
+            {
+                id: 2,
+                name: "Toa 2: Lời Cảm Ơn Từ Trái Tim",
+                title: "2. Biết Ơn Tình Yêu Vô Điều Kiện",
+                subtitle: "Toa Tàu Tri Ân",
+                message: "Nhân ngày Phụ nữ Việt Nam 20/10, con xin gửi lời cảm ơn chân thành nhất đến Mẹ. Cảm ơn Mẹ vì những bữa cơm ấm áp, những lời dặn dò dịu dàng và tình yêu thương bao la không bờ bến mà Mẹ luôn dành cho con mỗi ngày."
+            },
+            {
+                id: 3,
+                name: "Toa 3: Lời Chúc Bình An",
+                title: "3. Cầu Chúc Sức Khỏe & An Yên",
+                subtitle: "Toa Tàu Cầu Chúc",
+                message: "Con cầu chúc cho Mẹ yêu của con luôn dồi dào sức khỏe, tinh thần an nhiên, nụ cười luôn rạng rỡ trên môi. Mong rằng 365 ngày trong năm đều là những ngày ngập tràn niềm vui và bình an dành cho Mẹ!"
+            },
+            {
+                id: 4,
+                name: "Toa 4: Tấm Vé Hạnh Phúc",
+                title: "4. Lời Chúc Riêng Của Bạn Dành Cho Mẹ",
+                subtitle: "Toa Tàu Tự Viết",
+                message: "Hãy viết những lời chúc từ chính trái tim bạn gửi đến Mẹ ở ô bên dưới:"
+            }
+        ];
+
+        let currentStationIndex = 0;
+        let typewriterTimer = null;
+
+        // Bộ xử lý Hiệu ứng Chữ Chạy
+        function startTypewriterEffect(text) {
+            clearTimeout(typewriterTimer);
+            const target = document.getElementById('card-text');
+            const cursor = document.getElementById('typing-cursor');
+            target.innerText = "";
+            cursor.style.display = "inline-block";
+            
+            let index = 0;
+            function typeNextChar() {
+                if (index < text.length) {
+                    target.innerText += text.charAt(index);
+                    index++;
+                    typewriterTimer = setTimeout(typeNextChar, 35);
+                } else {
+                    typewriterTimer = setTimeout(() => {
+                        cursor.style.display = "none";
+                    }, 1500);
+                }
+            }
+            typeNextChar();
+        }
+
+        function boardExpressTrain() {
+            const viewTicket = document.getElementById('view-ticket');
+            const viewTrain = document.getElementById('view-train');
+
+            playSteamWhistle();
+            
+            if (!isAudioRunning) {
+                toggleAudioEngine();
+            }
+
+            viewTicket.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                viewTicket.classList.add('hidden');
+                viewTrain.classList.remove('hidden');
+                setTimeout(() => {
+                    viewTrain.classList.remove('opacity-0', 'scale-95');
+                    viewTrain.classList.add('opacity-100', 'scale-100');
+                    selectCarriage(1);
+                    triggerConfetti();
+                }, 50);
+            }, 600);
+        }
+
+        function selectCarriage(id) {
+            currentStationIndex = id - 1;
+            const station = stations[currentStationIndex];
+
+            document.getElementById('station-name-text').innerText = station.name;
+            document.getElementById('card-title').innerText = station.title;
+            document.getElementById('card-subtitle').innerText = station.subtitle;
+
+            // Kích hoạt chữ chạy khi chuyển toa
+            startTypewriterEffect(station.message);
+
+            const customEditor = document.getElementById('custom-message-editor');
+            if (id === 4) {
+                customEditor.classList.remove('hidden');
+                customEditor.classList.add('flex');
+            } else {
+                customEditor.classList.add('hidden');
+                customEditor.classList.remove('flex');
+            }
+
+            const track = document.getElementById('train-track');
+            const offset = -(id - 1) * 180;
+            track.style.transform = `translateX(${offset}px)`;
+
+            document.querySelectorAll('.carriage-item').forEach((item, idx) => {
+                if (idx === id - 1) {
+                    item.classList.remove('border-gold/30', 'opacity-80');
+                    item.classList.add('border-gold', 'shadow-gold-glow', 'opacity-100');
+                } else {
+                    item.classList.add('border-gold/30', 'opacity-80');
+                    item.classList.remove('border-gold', 'shadow-gold-glow', 'opacity-100');
+                }
+            });
+        }
+
+        function nextCarriage() {
+            let nextId = (currentStationIndex + 1) % stations.length + 1;
+            selectCarriage(nextId);
+        }
+
+        function prevCarriage() {
+            let prevId = (currentStationIndex - 1 + stations.length) % stations.length + 1;
+            selectCarriage(prevId);
+        }
+
+        function saveCustomWish() {
+            const input = document.getElementById('custom-wish-input').value;
+            if (input.trim() !== '') {
+                stations[3].message = `"${input}"`;
+                startTypewriterEffect(stations[3].message);
+                triggerConfetti();
+            }
+        }
+
+        function copyCurrentWish() {
+            const wishText = document.getElementById('card-text').innerText;
+            navigator.clipboard.writeText(wishText).then(() => {
+                alert("Đã sao chép lời chúc thành công! Bạn có thể gửi cho Mẹ ngay bây giờ. 💖");
+            });
+        }
+
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 70,
+                    spread: 80,
+                    origin: { y: 0.6 },
+                    colors: ['#ffd700', '#ff4d6d', '#ffb3c6', '#ffffff']
+                });
+            }
+        }
+    </script>
+</body>
+</html>
